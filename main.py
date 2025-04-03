@@ -11,15 +11,19 @@ class GameView(arcade.Window):
     
     def __init__(self):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
-        self.player_texture = arcade.load_texture("Images\Personagen.png")
-
-        self.player_sprite = arcade.Sprite(self.player_texture)
-        self.player_sprite.center_x = 100
-        self.player_sprite.center_y = 128
-        self.player_list = arcade.SpriteList()
-        self.player_list.append(self.player_sprite)
-        self.wall_list = arcade.SpriteList(use_spatial_hash=True)
-        for x in range(0, 1250, 64):
+        self.player_texture = None
+        self.player_sprite = None
+        self.player_list = None
+        self.wall_list = None
+    def setup(self):
+         self.player_texture = arcade.load_texture("Images\Personagen.png")
+         self.player_sprite = arcade.Sprite(self.player_texture)
+         self.player_sprite.center_x = 100
+         self.player_sprite.center_y = 128
+         self.player_list = arcade.SpriteList()
+         self.player_list.append(self.player_sprite)
+         self.wall_list = arcade.SpriteList(use_spatial_hash=True)
+         for x in range(0, 1250, 64):
             wall = arcade.Sprite("Images\Terreno.png", scale=0.5)
             wall.center_x = x
             wall.center_y = 32
@@ -31,9 +35,6 @@ class GameView(arcade.Window):
                  self.wall_list.append(wall)
                  self.background_color = arcade.csscolor.BLUE_VIOLET
                  self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, walls=self.wall_list, gravity_constant=GRAVITY)
-    def setup(self):
-
-        pass
     def on_draw(self):
              self.clear()
              arcade.draw_sprite(self.player_sprite)
@@ -45,6 +46,10 @@ class GameView(arcade.Window):
         self.physics_engine.update()
 
     def on_key_press(self, key, modifiers):
+        
+        if key == arcade.key.ESCAPE:
+            self.setup()
+            
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
