@@ -20,7 +20,10 @@ class GameView(arcade.Window):
         self.coin_list = None
         self.collect_coin_sound = arcade.load_sound("Sounds\item-pick-up-38258.mp3")
         self.jump_sound = arcade.load_sound("Sounds\jump.mp3")
-        
+        self.gui_camera = None
+        self.score = 0
+        self.score_text = None
+
     def setup(self):
          
          self.player_texture = arcade.load_texture("Images\Personagen.png")
@@ -52,7 +55,9 @@ class GameView(arcade.Window):
                  self.background_color = arcade.csscolor.BLUE_VIOLET
                  self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, walls=self.wall_list, gravity_constant=GRAVITY)
                  self.camera = arcade.Camera2D()
-                 
+                 self.gui_camera = arcade.Camera2D()
+                 self.score = 0
+                 self.score_text = arcade.Text(f"Score: {self.score}", x=0, y=5)
     def on_draw(self):
              
              self.clear()
@@ -61,6 +66,9 @@ class GameView(arcade.Window):
              self.player_list.draw()
              self.wall_list.draw()
              self.coin_list.draw()
+             self.gui_camera.use()
+             self.score_text.draw()
+
 
     def on_update(self, delta_time):
 
@@ -69,6 +77,10 @@ class GameView(arcade.Window):
         for coin in coin_hit_list:
             coin.remove_from_sprite_lists()
             arcade.play_sound(self.collect_coin_sound)
+            self.score += 75
+            self.score_text.text = f"Score: {self.score}"
+            
+            
         self.camera.position = self.player_sprite.position
 
     def on_key_press(self, key, modifiers):
