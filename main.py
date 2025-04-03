@@ -18,6 +18,8 @@ class GameView(arcade.Window):
         self.wall_list = None
         self.camera = None
         self.coin_list = None
+        self.collect_coin_sound = arcade.load_sound("Sounds\item-pick-up-38258.mp3")
+        self.jump_sound = arcade.load_sound("Sounds\jump.mp3")
         
     def setup(self):
          
@@ -66,6 +68,7 @@ class GameView(arcade.Window):
         coin_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
         for coin in coin_hit_list:
             coin.remove_from_sprite_lists()
+            arcade.play_sound(self.collect_coin_sound)
         self.camera.position = self.player_sprite.position
 
     def on_key_press(self, key, modifiers):
@@ -76,6 +79,7 @@ class GameView(arcade.Window):
         if key == arcade.key.UP or key == arcade.key.W:
             if self.physics_engine.can_jump():
                 self.player_sprite.change_y = PLAYER_JUMP_SPEED
+                arcade.play_sound(self.jump_sound)
         if key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = -JOGADOR_VELOCIDADE
         elif key == arcade.key.RIGHT or key == arcade.key.D:
