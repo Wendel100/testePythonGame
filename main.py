@@ -1,23 +1,18 @@
 import arcade
-import pygame
-# Constants
+
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_TITLE = "Jogo de Plataforma"
-rodando = True
-velocidade =1
+JOGADOR_VELOCIDADE = 5
+
 
 class GameView(arcade.Window):
-    """
-    Main application class.
-    """
-
+    
     def __init__(self):
         super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
         self.player_texture = arcade.load_texture("Images\Personagen.png")
 
         self.player_sprite = arcade.Sprite(self.player_texture)
-        perso = self.player_sprite = arcade.Sprite(self.player_texture)
         self.player_sprite.center_x = 100
         self.player_sprite.center_y = 128
         self.player_list = arcade.SpriteList()
@@ -34,22 +29,32 @@ class GameView(arcade.Window):
                  wall.position = coordinate
                  self.wall_list.append(wall)
                  self.background_color = arcade.csscolor.BLUE_VIOLET
+                 self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
 
     def setup(self):
 
         pass
-
     def on_draw(self):
-
              self.clear()
              arcade.draw_sprite(self.player_sprite)
              self.player_list.draw()
              self.wall_list.draw()
+    def on_update(self, delta_time):
+        self.physics_engine.update()
+
+    def on_key_press(self, key, modifiers):
+        if key == arcade.key.LEFT or key == arcade.key.W:
+            self.player_sprite.change_X = -JOGADOR_VELOCIDADE
+        elif key == arcade.key.RIGHT or key == arcade.key.A:
+            self.player_sprite.change_x +=JOGADOR_VELOCIDADE
+    def on_key_release(self, key, modifiers):
+        if key == arcade.key.LEFT or key == arcade.key.W:
+            self.player_sprite.change_x = 0
+        elif key == arcade.key.RIGHT or key == arcade.key.A:
+            self.player_sprite.change_x = 0
 def main():
     window = GameView()
     window.setup()
     arcade.run()
-
-
 if __name__ == "__main__":
     main()
