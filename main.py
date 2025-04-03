@@ -21,6 +21,9 @@ class GameView(arcade.Window):
         self.coin_list = None
         self.collect_coin_sound = arcade.load_sound("Sounds\item-pick-up-38258.mp3")
         self.jump_sound = arcade.load_sound("Sounds\jump.mp3")
+        self.music = arcade.load_sound("Sounds\Music_Theme.mp3")
+        self.music_player = arcade.play_sound(self.music)
+
         self.gui_camera = None
         self.score = 0
         self.score_text = None
@@ -80,7 +83,7 @@ class GameView(arcade.Window):
         self.physics_engine.update()
 
         coin_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.scene["Coins"])
-        
+
         for coin in coin_hit_list:
             coin.remove_from_sprite_lists()
             arcade.play_sound(self.collect_coin_sound)
