@@ -3,8 +3,9 @@ import arcade
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_TITLE = "Jogo de Plataforma"
-JOGADOR_VELOCIDADE = 5
-
+JOGADOR_VELOCIDADE = 3
+GRAVITY = 1
+PLAYER_JUMP_SPEED = 16
 
 class GameView(arcade.Window):
     
@@ -29,8 +30,7 @@ class GameView(arcade.Window):
                  wall.position = coordinate
                  self.wall_list.append(wall)
                  self.background_color = arcade.csscolor.BLUE_VIOLET
-                 self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
-
+                 self.physics_engine = arcade.PhysicsEnginePlatformer(self.player_sprite, walls=self.wall_list, gravity_constant=GRAVITY)
     def setup(self):
 
         pass
@@ -39,18 +39,23 @@ class GameView(arcade.Window):
              arcade.draw_sprite(self.player_sprite)
              self.player_list.draw()
              self.wall_list.draw()
+
     def on_update(self, delta_time):
+
         self.physics_engine.update()
 
     def on_key_press(self, key, modifiers):
-        if key == arcade.key.LEFT or key == arcade.key.W:
-            self.player_sprite.change_X = -JOGADOR_VELOCIDADE
-        elif key == arcade.key.RIGHT or key == arcade.key.A:
-            self.player_sprite.change_x +=JOGADOR_VELOCIDADE
+        if key == arcade.key.UP or key == arcade.key.W:
+            if self.physics_engine.can_jump():
+                self.player_sprite.change_y = PLAYER_JUMP_SPEED
+        if key == arcade.key.LEFT or key == arcade.key.A:
+            self.player_sprite.change_x = -JOGADOR_VELOCIDADE
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
+            self.player_sprite.change_x = JOGADOR_VELOCIDADE
     def on_key_release(self, key, modifiers):
-        if key == arcade.key.LEFT or key == arcade.key.W:
+        if key == arcade.key.LEFT or key == arcade.key.A:
             self.player_sprite.change_x = 0
-        elif key == arcade.key.RIGHT or key == arcade.key.A:
+        elif key == arcade.key.RIGHT or key == arcade.key.D:
             self.player_sprite.change_x = 0
 def main():
     window = GameView()
